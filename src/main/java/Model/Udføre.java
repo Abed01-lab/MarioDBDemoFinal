@@ -132,8 +132,9 @@ public class Udføre {
 
     private void tilføjeBestillingTilListe(int nr, int antal, int tid) {
         for (int i = 0; i < antal; i++) {
-            bestillingsListe.tilføj(menu.menuListe.get(i));
-            omsætning.tilføj(menu.menuListe.get(i));
+            bestillingsListe.tilføj(menu.menuListe.get(nr));
+            omsætning.tilføj(menu.menuListe.get(nr));
+            omsætning.tilføjDB(menu.menuListe.get(nr));       
             menu.menuListe.get(i).afhentningsTid = tid;
         }
     }

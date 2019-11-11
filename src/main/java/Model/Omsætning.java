@@ -4,6 +4,7 @@
 
 package Model;
 
+import Database.PizzaMapper;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 public class Omsætning {
 
     ArrayList<Pizza> omsætningsListe = new ArrayList<Pizza>();
+    PizzaMapper pm = new PizzaMapper();
 
     public int beregn() {
         int sum = 0;
@@ -20,6 +22,10 @@ public class Omsætning {
             sum = sum + pizza.getPris();
         }
         return sum;
+    }
+    
+    public void tilføjDB (Pizza pizza) {
+        pm.InnsertPizza(pizza, "Omsætning");
     }
 
     public void tilføj(Pizza pizza) {
