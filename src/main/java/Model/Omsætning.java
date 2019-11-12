@@ -25,7 +25,7 @@ public class Omsætning {
     }
     
     public void tilføjDB (Pizza pizza) {
-        pm.InnsertPizza(pizza, "Omsætning");
+        pm.InsertPizza(pizza, "Omsætning");
     }
 
     public void tilføj(Pizza pizza) {
@@ -33,6 +33,7 @@ public class Omsætning {
     }
 
     public void printListe() {
+        getDatafraDB();
         if (omsætningsListe.size() != 0) {
             int i = 0;
             for (Pizza pizza : omsætningsListe) {
@@ -44,27 +45,29 @@ public class Omsætning {
         }
     }
 
-    private String favoritePizza(ArrayList list) {
+    private String favoritePizza() {
+        getDatafraDB();
         int maxCounter = 0;
         Pizza favoritPizza = new Pizza("", 0,"", 0);
 
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < omsætningsListe.size(); i++) {
             int counter = 0;
-            for (int j = 0; j < list.size(); j++) {
-                if (list.get(i) == list.get(j)) {
+            for (int j = 0; j < omsætningsListe.size(); j++) {
+                if (omsætningsListe.get(i) == omsætningsListe.get(j)) {
                     counter++;
                 }
             }
 
             if (maxCounter < counter) {
                 maxCounter = counter;
-                favoritPizza = (Pizza) list.get(i);
+                favoritPizza = (Pizza) omsætningsListe.get(i);
             }
         }
         return "favorit pizza: " + favoritPizza.getPizzaNavn() + ", antal: " + (maxCounter);
     }
 
     public void exportereOmsætningTilFil() throws IOException {
+        getDatafraDB();
         File file = new File("Omsætning.text");
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
         bw.write("Pizza:\n");
@@ -76,9 +79,13 @@ public class Omsætning {
 
         bw.write("\nTotal omsætning: " + beregn() + " kr.");
         bw.write("\n");
-        bw.write(favoritePizza(omsætningsListe));
+        bw.write(favoritePizza());
         bw.close();
         
         System.out.println("Er blevet eksporterede!");
+    }
+    
+    private void getDatafraDB (){
+        omsætningsListe = new PizzaMapper().getPizzas("omsætning");
     }
 }

@@ -1,8 +1,6 @@
 // @Abed
 // @Sumit
 // @ Gustav
-
-
 package Model;
 
 import Database.PizzaMapper;
@@ -34,8 +32,18 @@ public class Udføre {
 
                 //Fjern bestilling                               
                 case 2:
-                    fjernBestilling();
+                    bestillingsListe.printListe();
+                    System.out.println("Indtast pizza nr for at fjerne");
+                    System.out.println("Tryk 0 for at gå tilbage");
+                    tjekNumber();
+                    int pizzaNr = input.nextInt();
+                    if (pizzaNr == 0) {
+                        break;
+                    } else{
+                    fjernBestilling(pizzaNr);
                     break;
+                        
+                    }
 
                 //Print bestillingsListe
                 case 3:
@@ -46,20 +54,15 @@ public class Udføre {
                 case 4:
                     printMenu();
                     break;
-                
+
                 //Printer omsætingen i console
                 case 5:
                     printOmsætning();
                     break;
-                 
+
                 //Eksportere omsætning til textfil
                 case 6:
                     eksportereOmsætningTiltxt();
-                    break;
-                
-                //SEND MENU TIL DATABASE
-                case 7:
-                    SendTilDb();
                     break;
             }
         }
@@ -68,14 +71,19 @@ public class Udføre {
     private void opretBestilling(boolean bestil) {
         while (bestil) {
             System.out.println("Hvilken pizza nr vil du tilføje?");
+            System.out.println("Tryk 0 for at gå tilbage");
+            tjekNumber();
             int pizzaNr = input.nextInt();
 
-            if (pizzaNr > 14 || pizzaNr < 1) {
+            if (pizzaNr == 0) {
+                break;
+            } else if (pizzaNr > 14 || pizzaNr < 1) {
                 System.out.println("Pizza findes ikke, prøv igen!");
                 break;
             }
 
             System.out.println("Hvor mange vil du tilføje");
+            tjekNumber();
             int antal = input.nextInt();
 
             if (antal <= 0) {
@@ -84,10 +92,11 @@ public class Udføre {
             }
 
             System.out.println("Hvornår skal orden afhentes?");
+            tjekNumber();
             int afhentTid = input.nextInt();
 
             if (afhentTid > 2400 || afhentTid < 0) {
-                System.out.println("Uglydlig tidspunkt...");
+                System.out.println("Ugyldigt tidspunkt...");
                 break;
             }
 
@@ -95,6 +104,7 @@ public class Udføre {
 
             System.out.println("Vil du tilføje mere...");
             System.out.println("1 for ja, 2 for nej");
+            tjekNumber();
             int svar = input.nextInt();
 
             if (svar == 2) {
@@ -103,12 +113,8 @@ public class Udføre {
         }
     }
 
-    private void fjernBestilling() {
-        bestillingsListe.printListe();
-        System.out.println("Indtast pizza nr for at fjerne");
-        int pizzaNr1 = input.nextInt();
-
-        bestillingsListe.fjern(pizzaNr1);
+    private void fjernBestilling(int pizzaNr) {
+        bestillingsListe.fjern(pizzaNr);
         System.out.println("Er fjernet!");
     }
 
@@ -132,19 +138,10 @@ public class Udføre {
 
     private void tilføjeBestillingTilListe(int nr, int antal, int tid) {
         for (int i = 0; i < antal; i++) {
-            bestillingsListe.tilføj(menu.menuListe.get(nr));
-            omsætning.tilføj(menu.menuListe.get(nr));
-            omsætning.tilføjDB(menu.menuListe.get(nr));       
-            menu.menuListe.get(i).afhentningsTid = tid;
+            bestillingsListe.tilføj(menu.menuListe.get(nr - 1));
+            omsætning.tilføjDB(menu.menuListe.get(nr - 1));
+            menu.menuListe.get(nr - 1).afhentningsTid = tid;
         }
-    }
-    
-    private void SendTilDb(){
-        for(Pizza pizza: menu.menuListe){
-           ps.InnsertPizza(pizza, "pizza");
-        }
-        System.out.println("tjek database!");
-            
     }
 
     private void startText() {
@@ -157,6 +154,12 @@ public class Udføre {
         System.out.println("6. Eksportere omsætning");
 
     }
-    
+
+    private void tjekNumber() {
+        while (!input.hasNextInt()) {
+            System.out.println("that is not a number!");
+            input.next();
+        }
+    }
 
 }
