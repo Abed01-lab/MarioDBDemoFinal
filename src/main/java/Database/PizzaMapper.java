@@ -35,7 +35,7 @@ public class PizzaMapper {
         return pizzas;
     }
         
-    public void InnsertPizza (Pizza pizza, String db) {
+    public void InsertPizza (Pizza pizza, String db) {
         String sql = "INSERT INTO " + db + " (name, description, price) VALUES (?,?,?)";
         try {
             Connection con = DatabaseConnector.getConnector();
